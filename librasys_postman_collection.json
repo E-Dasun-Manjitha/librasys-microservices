@@ -1,0 +1,647 @@
+{
+	"info": {
+		"_postman_id": "librasys-complete-collection-2026",
+		"name": "LibraSys Microservices - Member-by-Member Verification",
+		"description": "Complete Postman Collection for testing all individual microservices directly (Ports 8081-8085) with X-API-KEY headers and via API Gateway (Port 8080) with OAuth 2.0 / JWT tokens.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "gatewayUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "memberId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "bookId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "loanId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "reservationId",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Student 1 - Auth & Member Service (Port 8081)",
+			"item": [
+				{
+					"name": "1.1 Direct Register Member (Port 8081)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.id) {",
+									"    pm.collectionVariables.set('memberId', jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "auth-service-key-2026"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Student Demo User\",\n  \"email\": \"student_demo@librasys.test\",\n  \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/auth/register",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["api", "auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "1.2 Direct Login Member & Auto-Save JWT (Port 8081)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('jwt_token', jsonData.token);",
+									"    pm.collectionVariables.set('memberId', jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "auth-service-key-2026"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"student_demo@librasys.test\",\n  \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/auth/login",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "1.3 Direct Get Member by ID (Port 8081)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "auth-service-key-2026"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8081/api/members/{{memberId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["api", "members", "{{memberId}}"]
+						}
+					}
+				},
+				{
+					"name": "1.4 Test Security Block (Missing API Key -> 401)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/members/{{memberId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["api", "members", "{{memberId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Student 2 - Book Catalog Service (Port 8082)",
+			"item": [
+				{
+					"name": "2.1 Direct Get All Books (Port 8082)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (Array.isArray(jsonData) && jsonData.length > 0) {",
+									"    pm.collectionVariables.set('bookId', jsonData[0].id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "book-service-key-2026"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8082/api/books",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "books"]
+						}
+					}
+				},
+				{
+					"name": "2.2 Direct Get Book by ID (Port 8082)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "book-service-key-2026"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8082/api/books/{{bookId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "books", "{{bookId}}"]
+						}
+					}
+				},
+				{
+					"name": "2.3 Direct Create New Book (Port 8082)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "book-service-key-2026"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"isbn\": \"978-0134685991\",\n  \"title\": \"Effective Java (3rd Edition)\",\n  \"author\": \"Joshua Bloch\",\n  \"category\": \"Software Engineering\",\n  \"totalCopies\": 5,\n  \"copiesAvailable\": 5\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/books",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "books"]
+						}
+					}
+				},
+				{
+					"name": "2.4 Test Security Block (Missing API Key -> 401)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/books",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "books"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Student 3 - Loan & Borrowing Service (Port 8083)",
+			"item": [
+				{
+					"name": "3.1 Direct Borrow Book (Port 8083)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.id) {",
+									"    pm.collectionVariables.set('loanId', jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "loan-service-key-2026"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"memberId\": \"{{memberId}}\",\n  \"bookId\": \"{{bookId}}\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/loans",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8083",
+							"path": ["api", "loans"]
+						}
+					}
+				},
+				{
+					"name": "3.2 Direct Return Borrowed Book (Port 8083)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "loan-service-key-2026"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8083/api/loans/{{loanId}}/return",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8083",
+							"path": ["api", "loans", "{{loanId}}", "return"]
+						}
+					}
+				},
+				{
+					"name": "3.3 Direct Get Loans by Member ID (Port 8083)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "loan-service-key-2026"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8083/api/loans/member/{{memberId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8083",
+							"path": ["api", "loans", "member", "{{memberId}}"]
+						}
+					}
+				},
+				{
+					"name": "3.4 Direct Get Overdue Loans (Port 8083)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "loan-service-key-2026"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8083/api/loans/overdue",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8083",
+							"path": ["api", "loans", "overdue"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Student 4 - Reservation Service (Port 8084)",
+			"item": [
+				{
+					"name": "4.1 Direct Create Reservation (Port 8084)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.id) {",
+									"    pm.collectionVariables.set('reservationId', jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "reservation-service-key-2026"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"memberId\": \"{{memberId}}\",\n  \"bookId\": \"{{bookId}}\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8084/api/reservations",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8084",
+							"path": ["api", "reservations"]
+						}
+					}
+				},
+				{
+					"name": "4.2 Direct Get Reservations by Member ID (Port 8084)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "reservation-service-key-2026"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8084/api/reservations/member/{{memberId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8084",
+							"path": ["api", "reservations", "member", "{{memberId}}"]
+						}
+					}
+				},
+				{
+					"name": "4.3 Direct Cancel / Notify Reservation (Port 8084)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "reservation-service-key-2026"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8084/api/reservations/{{reservationId}}/notify",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8084",
+							"path": ["api", "reservations", "{{reservationId}}", "notify"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Student 5 - Notification Service (Port 8085)",
+			"item": [
+				{
+					"name": "5.1 Direct Send Email Notification (Port 8085)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "notification-service-key-2026"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"memberId\": \"{{memberId}}\",\n  \"message\": \"Welcome to LibraSys Smart Library! Your account is active.\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/api/notify/email",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "notify", "email"]
+						}
+					}
+				},
+				{
+					"name": "5.2 Direct Send Due Date Reminder (Port 8085)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "notification-service-key-2026"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"memberId\": \"{{memberId}}\",\n  \"message\": \"Friendly reminder: 'Clean Code' is due on 2026-09-01. Please return on time.\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/api/notify/due-reminder",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "notify", "due-reminder"]
+						}
+					}
+				},
+				{
+					"name": "5.3 Direct Get Member Notification History (Port 8085)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "notification-service-key-2026"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8085/api/notify/history/{{memberId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "notify", "history", "{{memberId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "API Gateway (Port 8080 - Central End-to-End)",
+			"item": [
+				{
+					"name": "Gateway Register (/api/auth/register)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Gateway Tester\",\n  \"email\": \"gateway_user@librasys.test\",\n  \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{gatewayUrl}}/api/auth/register",
+							"host": ["{{gatewayUrl}}"],
+							"path": ["api", "auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "Gateway Login & Token Issuance (/api/auth/login)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('jwt_token', jsonData.token);",
+									"    pm.collectionVariables.set('memberId', jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"gateway_user@librasys.test\",\n  \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{gatewayUrl}}/api/auth/login",
+							"host": ["{{gatewayUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Gateway Fetch Books (/api/books with JWT)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{gatewayUrl}}/api/books",
+							"host": ["{{gatewayUrl}}"],
+							"path": ["api", "books"]
+						}
+					}
+				},
+				{
+					"name": "Gateway Borrow Book (/api/loans with JWT)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"memberId\": \"{{memberId}}\",\n  \"bookId\": \"{{bookId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{gatewayUrl}}/api/loans",
+							"host": ["{{gatewayUrl}}"],
+							"path": ["api", "loans"]
+						}
+					}
+				},
+				{
+					"name": "Gateway View Notifications (/api/notify/history with JWT)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{gatewayUrl}}/api/notify/history/{{memberId}}",
+							"host": ["{{gatewayUrl}}"],
+							"path": ["api", "notify", "history", "{{memberId}}"]
+						}
+					}
+				}
+			]
+		}
+	]
+}

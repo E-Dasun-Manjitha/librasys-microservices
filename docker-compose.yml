@@ -1,0 +1,187 @@
+services:
+  # --- Infrastructure ---
+  eureka-server:
+    build: ./eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - librasys-net
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - librasys-net
+
+  # --- MongoDB Databases (1 per microservice) ---
+  mongo-auth:
+    image: mongo:7
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongo-auth-data:/data/db
+    networks:
+      - librasys-net
+
+  mongo-books:
+    image: mongo:7
+    ports:
+      - "27020:27017"
+    volumes:
+      - mongo-books-data:/data/db
+    networks:
+      - librasys-net
+
+  mongo-loans:
+    image: mongo:7
+    ports:
+      - "27021:27017"
+    volumes:
+      - mongo-loans-data:/data/db
+    networks:
+      - librasys-net
+
+  mongo-reservations:
+    image: mongo:7
+    ports:
+      - "27022:27017"
+    volumes:
+      - mongo-reservations-data:/data/db
+    networks:
+      - librasys-net
+
+  mongo-notifications:
+    image: mongo:7
+    ports:
+      - "27023:27017"
+    volumes:
+      - mongo-notifications-data:/data/db
+    networks:
+      - librasys-net
+
+  # --- Backend Microservices ---
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_APPLICATION_NAME=auth-service
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo-auth:27017/librasys_auth
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
+    depends_on:
+      - mongo-auth
+      - eureka-server
+    networks:
+      - librasys-net
+
+  book-service:
+    build: ./book-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_APPLICATION_NAME=book-service
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo-books:27017/librasys_books
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
+    depends_on:
+      - mongo-books
+      - eureka-server
+    networks:
+      - librasys-net
+
+  loan-service:
+    build: ./loan-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SERVICES_BOOK_SERVICE_URL=http://book-service:8082
+      - SERVICES_BOOK_SERVICE_API_KEY=book-service-key-2026
+      - SERVICES_NOTIFICATION_SERVICE_URL=http://notification-service:8085
+      - SERVICES_NOTIFICATION_SERVICE_API_KEY=notification-service-key-2026
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo-loans:27017/librasys_loans
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
+    depends_on:
+      - book-service
+      - notification-service
+      - mongo-loans
+      - eureka-server
+    networks:
+      - librasys-net
+
+  reservation-service:
+    build: ./reservation-service
+    ports:
+      - "8084:8084"
+    environment:
+      - SERVICES_BOOK_SERVICE_URL=http://book-service:8082
+      - SERVICES_BOOK_SERVICE_API_KEY=book-service-key-2026
+      - SERVICES_NOTIFICATION_SERVICE_URL=http://notification-service:8085
+      - SERVICES_NOTIFICATION_SERVICE_API_KEY=notification-service-key-2026
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo-reservations:27017/librasys_reservations
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
+    depends_on:
+      - book-service
+      - notification-service
+      - mongo-reservations
+      - eureka-server
+    networks:
+      - librasys-net
+
+  notification-service:
+    build: ./notification-service
+    ports:
+      - "8085:8085"
+    environment:
+      - SPRING_APPLICATION_NAME=notification-service
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo-notifications:27017/librasys_notifications
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
+    depends_on:
+      - mongo-notifications
+      - eureka-server
+    networks:
+      - librasys-net
+
+  # --- API Gateway ---
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATA_REDIS_HOST=redis
+      - SERVICES_AUTH_SERVICE_URL=http://auth-service:8081
+      - SERVICES_BOOK_SERVICE_URL=http://book-service:8082
+      - SERVICES_LOAN_SERVICE_URL=http://loan-service:8083
+      - SERVICES_RESERVATION_SERVICE_URL=http://reservation-service:8084
+      - SERVICES_NOTIFICATION_SERVICE_URL=http://notification-service:8085
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
+    depends_on:
+      - auth-service
+      - book-service
+      - loan-service
+      - reservation-service
+      - notification-service
+      - eureka-server
+      - redis
+    networks:
+      - librasys-net
+
+  # --- Frontend Client Application ---
+  client-app:
+    build: ./client-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+    networks:
+      - librasys-net
+
+networks:
+  librasys-net:
+    driver: bridge
+
+volumes:
+  mongo-auth-data:
+  mongo-books-data:
+  mongo-loans-data:
+  mongo-reservations-data:
+  mongo-notifications-data:
