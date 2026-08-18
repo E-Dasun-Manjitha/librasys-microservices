@@ -1,0 +1,184 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        # Central Swagger UI Docs Aggregation Proxy Routes
+        - id: auth-docs
+          uri: ${SERVICES_AUTH_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/v3/api-docs/auth-service
+          filters:
+            - SetPath=/v3/api-docs
+            - name: AddRequestHeader
+              args:
+                name: X-API-KEY
+                value: auth-service-key-2026
+
+        - id: book-docs
+          uri: ${SERVICES_BOOK_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/v3/api-docs/book-service
+          filters:
+            - SetPath=/v3/api-docs
+            - name: AddRequestHeader
+              args:
+                name: X-API-KEY
+                value: book-service-key-2026
+
+        - id: loan-docs
+          uri: ${SERVICES_LOAN_SERVICE_URL:http://localhost:8083}
+          predicates:
+            - Path=/v3/api-docs/loan-service
+          filters:
+            - SetPath=/v3/api-docs
+            - name: AddRequestHeader
+              args:
+                name: X-API-KEY
+                value: loan-service-key-2026
+
+        - id: reservation-docs
+          uri: ${SERVICES_RESERVATION_SERVICE_URL:http://localhost:8084}
+          predicates:
+            - Path=/v3/api-docs/reservation-service
+          filters:
+            - SetPath=/v3/api-docs
+            - name: AddRequestHeader
+              args:
+                name: X-API-KEY
+                value: reservation-service-key-2026
+
+        - id: notification-docs
+          uri: ${SERVICES_NOTIFICATION_SERVICE_URL:http://localhost:8085}
+          predicates:
+            - Path=/v3/api-docs/notification-service
+          filters:
+            - SetPath=/v3/api-docs
+            - name: AddRequestHeader
+              args:
+                name: X-API-KEY
+                value: notification-service-key-2026
+
+        # Core Microservices Business Routes
+        - id: auth-service
+          uri: ${SERVICES_AUTH_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/auth/**, /api/members/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+                key-resolver: "#{@ipKeyResolver}"
+            - name: AddRequestHeader
+              args:
+                name: X-API-KEY
+                value: auth-service-key-2026
+
+        - id: book-service
+          uri: ${SERVICES_BOOK_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/books/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+                key-resolver: "#{@ipKeyResolver}"
+            - name: AddRequestHeader
+              args:
+                name: X-API-KEY
+                value: book-service-key-2026
+
+        - id: loan-service
+          uri: ${SERVICES_LOAN_SERVICE_URL:http://localhost:8083}
+          predicates:
+            - Path=/api/loans/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+                key-resolver: "#{@ipKeyResolver}"
+            - name: AddRequestHeader
+              args:
+                name: X-API-KEY
+                value: loan-service-key-2026
+
+        - id: reservation-service
+          uri: ${SERVICES_RESERVATION_SERVICE_URL:http://localhost:8084}
+          predicates:
+            - Path=/api/reservations/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+                key-resolver: "#{@ipKeyResolver}"
+            - name: AddRequestHeader
+              args:
+                name: X-API-KEY
+                value: reservation-service-key-2026
+
+        - id: notification-service
+          uri: ${SERVICES_NOTIFICATION_SERVICE_URL:http://localhost:8085}
+          predicates:
+            - Path=/api/notify/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+                key-resolver: "#{@ipKeyResolver}"
+            - name: AddRequestHeader
+              args:
+                name: X-API-KEY
+                value: notification-service-key-2026
+
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: 6379
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+  instance:
+    prefer-ip-address: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: "1. Auth & Member Service (Student 1) | API Key: auth-service-key-2026"
+        url: /v3/api-docs/auth-service
+      - name: "2. Book Catalog Service (Student 2) | API Key: book-service-key-2026"
+        url: /v3/api-docs/book-service
+      - name: "3. Loan & Borrowing Service (Student 3) | API Key: loan-service-key-2026"
+        url: /v3/api-docs/loan-service
+      - name: "4. Reservation Service (Student 4) | API Key: reservation-service-key-2026"
+        url: /v3/api-docs/reservation-service
+      - name: "5. Notification Service (Student 5) | API Key: notification-service-key-2026"
+        url: /v3/api-docs/notification-service
+
+jwt:
+  secret: LibraSys2026SuperSecretKeyForJWTSigningMustBeAtLeast256Bits!!
