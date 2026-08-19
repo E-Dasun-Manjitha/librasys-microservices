@@ -55,13 +55,13 @@ A distributed microservices system built with Spring Boot 3, Spring Cloud Gatewa
 
 ## 2. Team Member Work Breakdown Matrix
 
-| Student | Role | Microservice | Database Port | Key Responsibilities & Endpoints |
+| Member Name | Role | Microservice | Database Port | Key Responsibilities & Endpoints |
 |---|---|---|:---:|---|
-| **Student 1** | Gateway & Security Lead | **API Gateway & Auth Service** | `27019` | Central Routing, JWT Filter, Redis Rate Limiting, Global CORS, Central Swagger Hub, `/api/auth/register`, `/api/auth/login`, `/api/members/{id}` |
-| **Student 2** | Backend Engineer | **Book Service** | `27020` | Catalog Management, `ApiKeyFilter`, Inventory tracking, DataLoader Seeding, `/api/books`, `/api/books/{id}`, `/api/books/{id}/decrement`, `/api/books/{id}/increment` |
-| **Student 3** | Backend Engineer | **Loan Service** | `27021` | Borrowing & Returning, Inter-Service RestTemplate calls to Book Service & Notification Service, Due Date calculation, `/api/loans`, `/api/loans/{id}/return`, `/api/loans/member/{id}`, `/api/loans/overdue` |
-| **Student 4** | Backend Engineer | **Reservation Service** | `27022` | Reservation Queuing, Stock Checking, Inter-Service Notification dispatch, `/api/reservations`, `/api/reservations/{id}`, `/api/reservations/member/{id}`, `/api/reservations/{id}/notify` |
-| **Student 5** | Backend Engineer | **Notification Service** | `27023` | History Logging, Simulated Email & Due Date Alerts, `/api/notify/email`, `/api/notify/due-reminder`, `/api/notify/history/{memberId}` |
+| **E. Dasun Manjitha** (Lead) | Gateway & Security Lead | **API Gateway & Auth Service** | `27019` | Central Routing, JWT Filter, Redis Rate Limiting, Global CORS, Central Swagger Hub, `/api/auth/register`, `/api/auth/login`, `/api/members/{id}` |
+| **W.G.C.M. Nimsara** | Backend Engineer | **Book Service** | `27020` | Catalog Management, `ApiKeyFilter`, Inventory tracking, DataLoader Seeding, `/api/books`, `/api/books/{id}`, `/api/books/{id}/decrement`, `/api/books/{id}/increment` |
+| **W.A.S.I. Wijesinghe** | Backend Engineer | **Loan Service** | `27021` | Borrowing & Returning, Inter-Service RestTemplate calls to Book Service & Notification Service, Due Date calculation, `/api/loans`, `/api/loans/{id}/return`, `/api/loans/member/{id}`, `/api/loans/overdue` |
+| **R.G.D.N. Wijesuriya** | Backend Engineer | **Reservation Service** | `27022` | Reservation Queuing, Stock Checking, Inter-Service Notification dispatch, `/api/reservations`, `/api/reservations/{id}`, `/api/reservations/member/{id}`, `/api/reservations/{id}/notify` |
+| **R.T. Dinith Sasanga** | Full-Stack Engineer | **Notification Service & Client App** | `27023` | History Logging, Simulated Email & Alerts, React 18 SPA Frontend, `/api/notify/email`, `/api/notify/due-reminder`, `/api/notify/history/{memberId}` |
 
 ---
 
