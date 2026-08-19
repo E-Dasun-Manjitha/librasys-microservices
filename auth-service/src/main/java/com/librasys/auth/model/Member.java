@@ -25,6 +25,8 @@ public class Member {
 
     private String role = "MEMBER";
 
+    private java.time.LocalDateTime createdAt = java.time.LocalDateTime.now();
+
     public Member() {}
 
     public Member(String name, String email, String password) {
@@ -32,6 +34,7 @@ public class Member {
         this.email = email;
         this.password = password;
         this.role = "MEMBER";
+        this.createdAt = java.time.LocalDateTime.now();
     }
 
     // Getters and Setters
@@ -49,4 +52,7 @@ public class Member {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public java.time.LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(java.time.LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
