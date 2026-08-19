@@ -123,7 +123,8 @@ try {
 # Step D: Test Loan Flow (Borrow Book & Return Book)
 Write-Host "`n[Step D] Borrowing a book via Gateway (/api/loans)..."
 if ($books.Count -gt 0 -and $memberId) {
-    $targetBook = $books[0]
+    $availableBooks = @($books | Where-Object { $_.copiesAvailable -gt 0 })
+    $targetBook = if ($availableBooks.Count -gt 0) { $availableBooks[0] } else { $books[0] }
     $loanBody = @{
         memberId = $memberId
         bookId = $targetBook.id
