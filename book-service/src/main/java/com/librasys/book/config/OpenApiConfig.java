@@ -1,4 +1,4 @@
-package com.librasys.auth.config;
+package com.librasys.book.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfig {
 
-    @Value("${server.port:8081}")
+    @Value("${server.port:8082}")
     private int serverPort;
 
     @Bean
@@ -21,9 +21,9 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .servers(java.util.List.of(new Server().url("http://localhost:8080").description("API Gateway")))
                 .info(new Info()
-                        .title("LibraSys Auth & Member Service API")
+                        .title("LibraSys Book Catalog Service API")
                         .version("1.0.0")
-                        .description("Microservice API for Authentication, User Registration, and Member Management (Student 1)"))
+                        .description("Microservice API for Book Catalog Management & Stock (Student 2)"))
                 .addSecurityItem(new SecurityRequirement().addList("BearerAuth").addList("ApiKeyAuth"))
                 .components(new Components()
                         .addSecuritySchemes("BearerAuth", new SecurityScheme()
@@ -36,7 +36,7 @@ public class OpenApiConfig {
                                 .name("X-API-KEY")
                                 .type(SecurityScheme.Type.APIKEY)
                                 .in(SecurityScheme.In.HEADER)
-                                .description("Enter direct API Key: 'auth-service-key-2026'")));
+                                .description("Enter direct API Key: 'book-service-key-2026'")));
     }
 }
 

@@ -19,6 +19,14 @@ spring:
               args:
                 name: X-API-KEY
                 value: auth-service-key-2026
+            - name: AddRequestHeader
+              args:
+                name: X-Forwarded-Host
+                value: localhost:8080
+            - name: AddRequestHeader
+              args:
+                name: X-Forwarded-Port
+                value: 8080
 
         - id: book-docs
           uri: ${SERVICES_BOOK_SERVICE_URL:http://localhost:8082}
@@ -30,6 +38,14 @@ spring:
               args:
                 name: X-API-KEY
                 value: book-service-key-2026
+            - name: AddRequestHeader
+              args:
+                name: X-Forwarded-Host
+                value: localhost:8080
+            - name: AddRequestHeader
+              args:
+                name: X-Forwarded-Port
+                value: 8080
 
         - id: loan-docs
           uri: ${SERVICES_LOAN_SERVICE_URL:http://localhost:8083}
@@ -41,6 +57,14 @@ spring:
               args:
                 name: X-API-KEY
                 value: loan-service-key-2026
+            - name: AddRequestHeader
+              args:
+                name: X-Forwarded-Host
+                value: localhost:8080
+            - name: AddRequestHeader
+              args:
+                name: X-Forwarded-Port
+                value: 8080
 
         - id: reservation-docs
           uri: ${SERVICES_RESERVATION_SERVICE_URL:http://localhost:8084}
@@ -52,6 +76,14 @@ spring:
               args:
                 name: X-API-KEY
                 value: reservation-service-key-2026
+            - name: AddRequestHeader
+              args:
+                name: X-Forwarded-Host
+                value: localhost:8080
+            - name: AddRequestHeader
+              args:
+                name: X-Forwarded-Port
+                value: 8080
 
         - id: notification-docs
           uri: ${SERVICES_NOTIFICATION_SERVICE_URL:http://localhost:8085}
@@ -63,6 +95,14 @@ spring:
               args:
                 name: X-API-KEY
                 value: notification-service-key-2026
+            - name: AddRequestHeader
+              args:
+                name: X-Forwarded-Host
+                value: localhost:8080
+            - name: AddRequestHeader
+              args:
+                name: X-Forwarded-Port
+                value: 8080
 
         # Core Microservices Business Routes
         - id: auth-service

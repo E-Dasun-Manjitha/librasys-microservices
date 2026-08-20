@@ -1,0 +1,26 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: book-service
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27020/librasys_books}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+  instance:
+    prefer-ip-address: false
+    hostname: localhost
+    status-page-url: http://localhost:8082/swagger-ui/index.html
+    home-page-url: http://localhost:8082/swagger-ui/index.html
+
+api:
+  key: book-service-key-2026
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
