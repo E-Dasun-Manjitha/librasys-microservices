@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react'
 import { api, getAuth } from '../api.js'
 
+const formatDate = (dateStr) => {
+  if (!dateStr) return '—'
+  try {
+    return new Date(dateStr).toLocaleString('en-US', {
+      year: 'numeric', month: 'short', day: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    })
+  } catch { return dateStr }
+}
+
 function MyLoans() {
   const [loans, setLoans] = useState([])
   const [booksMap, setBooksMap] = useState({})
@@ -103,8 +113,8 @@ function MyLoans() {
                 <tr key={loan.id}>
                   <td>#{loan.id}</td>
                   <td>{getBookDisplay(loan.bookId)}</td>
-                  <td>{loan.loanDate}</td>
-                  <td>{loan.dueDate}</td>
+                  <td>{formatDate(loan.loanDate)}</td>
+                  <td>{formatDate(loan.dueDate)}</td>
                   <td><span className="badge badge-active">{loan.status}</span></td>
                   <td>
                     <button onClick={() => handleReturn(loan.id)} className="btn btn-sm btn-primary">
@@ -137,8 +147,8 @@ function MyLoans() {
                   <tr key={loan.id}>
                     <td>#{loan.id}</td>
                     <td>{getBookDisplay(loan.bookId)}</td>
-                    <td>{loan.loanDate}</td>
-                    <td>{loan.returnDate || '—'}</td>
+                    <td>{formatDate(loan.loanDate)}</td>
+                    <td>{formatDate(loan.returnDate)}</td>
                     <td><span className="badge badge-returned">{loan.status}</span></td>
                   </tr>
                 ))}

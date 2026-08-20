@@ -17,6 +17,15 @@ public class MemberController {
         this.memberRepository = memberRepository;
     }
 
+    // GET /api/members
+    @GetMapping
+    public java.util.List<MemberResponse> getAllMembers() {
+        return memberRepository.findAll().stream()
+                .map(member -> new MemberResponse(member.getId(), member.getName(),
+                        member.getEmail(), member.getRole()))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     // GET /api/members/{id}
     @GetMapping("/{id}")
     public MemberResponse getMember(@PathVariable String id) {

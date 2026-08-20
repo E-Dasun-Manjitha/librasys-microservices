@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react'
 import { api, getAuth } from '../api.js'
 
+const formatDate = (dateStr) => {
+  if (!dateStr) return '—'
+  try {
+    return new Date(dateStr).toLocaleString('en-US', {
+      year: 'numeric', month: 'short', day: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    })
+  } catch { return dateStr }
+}
+
 function MyReservations() {
   const [reservations, setReservations] = useState([])
   const [booksMap, setBooksMap] = useState({})
@@ -98,7 +108,7 @@ function MyReservations() {
                 <tr key={res.id}>
                   <td>#{res.id}</td>
                   <td>{getBookDisplay(res.bookId)}</td>
-                  <td>{res.reservationDate}</td>
+                  <td>{formatDate(res.reservationDate)}</td>
                   <td>
                     <span className={`badge badge-${res.status.toLowerCase()}`}>
                       {res.status}
