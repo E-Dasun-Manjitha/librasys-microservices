@@ -1,0 +1,9 @@
+com\librasys\book\repository\BookRepository.class
+com\librasys\book\model\Book.class
+com\librasys\book\repository\ApiKeyRepository.class
+com\librasys\book\filter\ApiKeyFilter.class
+com\librasys\book\model\ApiKey.class
+com\librasys\book\config\OpenApiConfig.class
+com\librasys\book\BookServiceApplication.class
+com\librasys\book\config\DataLoader.class
+com\librasys\book\controller\BookController.class
