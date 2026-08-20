@@ -36,7 +36,7 @@ public class OpenApiConfig {
                                 .name("X-API-KEY")
                                 .type(SecurityScheme.Type.APIKEY)
                                 .in(SecurityScheme.In.HEADER)
-                                .description("Enter direct API Key: 'notification-service-key-2026'")));
+                                .description("Enter direct API Key: 'notification-horizon/services-2026'")));
     }
 }
 

@@ -1,4 +1,5 @@
 server:
+  forward-headers-strategy: framework
   port: 8085
 
 spring:
@@ -19,7 +20,7 @@ eureka:
     home-page-url: http://localhost:8085/swagger-ui/index.html
 
 api:
-  key: notification-service-key-2026
+  key: notification-horizon/services-2026
 
 springdoc:
   swagger-ui:

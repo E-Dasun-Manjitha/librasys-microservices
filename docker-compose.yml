@@ -97,7 +97,7 @@ services:
       - SERVICES_BOOK_SERVICE_URL=http://book-service:8082
       - SERVICES_BOOK_SERVICE_API_KEY=book-service-key-2026
       - SERVICES_NOTIFICATION_SERVICE_URL=http://notification-service:8085
-      - SERVICES_NOTIFICATION_SERVICE_API_KEY=notification-service-key-2026
+      - SERVICES_NOTIFICATION_SERVICE_API_KEY=notification-horizon/services-2026
       - SPRING_DATA_MONGODB_URI=mongodb://mongo-loans:27017/librasys_loans
       - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
     depends_on:
@@ -116,7 +116,7 @@ services:
       - SERVICES_BOOK_SERVICE_URL=http://book-service:8082
       - SERVICES_BOOK_SERVICE_API_KEY=book-service-key-2026
       - SERVICES_NOTIFICATION_SERVICE_URL=http://notification-service:8085
-      - SERVICES_NOTIFICATION_SERVICE_API_KEY=notification-service-key-2026
+      - SERVICES_NOTIFICATION_SERVICE_API_KEY=notification-horizon/services-2026
       - SPRING_DATA_MONGODB_URI=mongodb://mongo-reservations:27017/librasys_reservations
       - EUREKA_SERVER_URL=http://eureka-server:8761/eureka/
     depends_on:

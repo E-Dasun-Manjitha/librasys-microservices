@@ -94,7 +94,7 @@ spring:
             - name: AddRequestHeader
               args:
                 name: X-API-KEY
-                value: notification-service-key-2026
+                value: notification-horizon/services-2026
             - name: AddRequestHeader
               args:
                 name: X-Forwarded-Host
@@ -178,7 +178,7 @@ spring:
             - name: AddRequestHeader
               args:
                 name: X-API-KEY
-                value: notification-service-key-2026
+                value: notification-horizon/services-2026
 
       globalcors:
         cors-configurations:
